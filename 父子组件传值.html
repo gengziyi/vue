@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="vue.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		{{RMB}}
+		<test @aaa="bbb"></test>
+	</div>
+	<script>
+			
+		Vue.component("test",{
+			template:`<h2 @click="fn">组件</h2>`,
+			methods:{
+				fn:function(){
+					this.$emit("aaa",2)
+				}
+			}
+		})
+
+
+
+		var root = new Vue({
+			el:"#wrap",
+			data:{
+				RMB:0,
+				name:"哈哈"
+			},
+			methods:{
+				bbb:function(e){
+					this.RMB = e;			
+				}
+			}
+		})
+	</script>
+</body>
+</html>

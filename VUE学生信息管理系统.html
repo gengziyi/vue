@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>第一次使用Vue</title>
+	<script src="vue.js"></script>
+</head>
+<body>
+	<div id='wrap'>
+		<p>
+			学生姓名：<input type="text" v-model="newStu.name">
+			学生性别：
+			<select v-model="newStu.sex">
+				<option value="男">男</option>
+				<option value="女">女</option>
+			</select>
+		</p>
+		<p><button @click="addStudents">添加学生</button></p>
+		<p v-if="!students.length">
+			未发现学生数据，请添加一条记录.
+		</p>
+		<ul>
+			<li v-for="(item,index) of students" v-show="item.sex===isVisible || isVisible === 'all'">
+				姓名：{{item.name}}
+				性别：{{item.sex}}
+				<button @click="editStuFn(index)">编辑</button>
+				<button @click="deleteStu(index)">删除</button>
+			</li>
+
+			<div v-if="editStu.isVisible">
+				<h2>编辑学生信息</h2>
+				<p>学生姓名：<input type="text" v-model="editStu.name"></p>
+				<p>
+					学生性别：
+					<select v-model="editStu.sex">
+						<option value="男">男</option>
+						<option value="女">女</option>
+					</select>
+				</p>
+				<button @click="editConfirm()">确定修改</button>
+				<button @click="editCancel">取消</button>
+			</div>
+		</ul>
+		
+		
+		<p>
+			筛选
+			<select v-model="isVisible">
+				<option value="all">全部</option>
+				<option value="男">男</option>
+				<option value="女">女</option>
+			</select>
+		</p>
+	</div>
+	<script>
+
+		new Vue({
+			el:"",
+			data:{
+
+			},
+			methods:{
+			}
+		})
+
+		var root = new Vue({
+			el:"#wrap",
+			data:{
+				students:[
+					{
+						name:"王大伟",
+						sex:"男"
+					},
+					{
+						name:"蒲杰杰",
+						sex:"男"
+					},
+					{
+						name:"赵红",
+						sex:"女"
+					},
+					{
+						name:"杜苗",
+						sex:"女"
+					}
+				],
+				isVisible:"all",
+				newStu:{
+					name:"",
+					sex:"男",
+				},
+				editStu:{
+					name:"",
+					sex:"",
+					isVisible:false,
+					index:NaN,
+				}
+			},
+			methods:{
+				addStudents:function(){
+					var obj = {};
+					obj.name = this.newStu.name;
+					obj.sex = this.newStu.sex;
+
+					this.students.push(obj);
+					this.newStu.name = "";
+				},
+				deleteStu:function(index){
+					this.students.splice(index,1);
+				},
+				editStuFn:function(index){
+					this.editStu.name = this.students[index].name;;
+					this.editStu.sex = this.students[index].sex;
+					this.editStu.isVisible = true;
+					this.editStu.index = index;
+				},
+				editConfirm:function(){
+					var n = this.editStu.index;
+					this.students[n].name = this.editStu.name;
+					this.students[n].sex = this.editStu.sex;
+					this.editStu.isVisible = false;
+				},
+				editCancel:function(){
+					this.editStu.isVisible = false;
+					console.log(this.editStu.index)
+				}
+			}
+		})	
+	</script>
+</body>
+</html>

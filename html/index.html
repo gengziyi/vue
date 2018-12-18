@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue项目</title>
+	<script src="axios.min.js"></script>
+	<script src="vue.js"></script>
+</head>
+<body>
+	<div id="wrap">{{message}}</div>
+	<script>
+		var root = new Vue({
+			el:"#wrap",
+			data:{
+				message:null
+			},
+			mounted:function(){
+				axios.get("/test").then((response)=>{
+					this.message = response.data;
+				})
+			}
+		})
+	</script>
+</body>
+</html>

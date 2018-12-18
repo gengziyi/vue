@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="vue.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		<my-title :name="test"></my-title>
+		<my-title name="bcd"></my-title>
+		<my-title name="cde"></my-title>
+	</div>
+	<script>
+		Vue.component("myTitle",{
+			template:`
+				<div>
+					<h2>{{name}},我是一个局部组件</h2>
+				</div>
+			`,
+			data:function(){
+				return {}
+			},
+			props:["name"],
+			methods:{
+				fn:function(){
+					alert(1)
+				}
+			}
+		})
+
+
+
+		var root = new Vue({
+			el:"#wrap",
+			data:{
+				test:"aaaa"
+			}
+		})
+	</script>
+</body>
+</html>

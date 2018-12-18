@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>订餐系统</title>
+	<link rel="stylesheet" href="bootstrap.css">
+	<script src="vue.js"></script>
+	<style>
+		#wrap{
+			width: 80%;
+			margin: 0 auto;
+		}
+		.cart{
+			width: 300px;
+			background: #2c2c2c;
+			box-shadow: 0 0 10px #2c2c2c;
+			position: fixed;
+			right: 0;
+			bottom: 0;
+			color: #fff;
+		}
+		.cart h4{
+			background: #fff;
+			line-height: 32px;
+			background: #fafafa;
+			border-top: 2px solid #0098dc;
+			color: #333;
+			padding: 0;
+			margin: 0;
+			padding-left: 15px;
+			font-size: 14px;
+		}
+		.cart h4 span{
+			color: #0089dc;
+			cursor: pointer;
+			transition: all 0.5s;
+		}
+		.cart h4 span:hover{
+			opacity: .7;
+		}
+		.total{
+			padding: 5px 15px;
+			font-size: 28px;
+		}
+		.total button{
+			float: right;
+		}
+		ul button{
+			width: 20px;
+			height: 20px;
+			line-height: 15px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<h2>{{title}}</h2>
+		<hr>
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+					<td>商品名称</td>
+					<td>价格</td>
+					<td>操作</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(item,index) of foodList">
+					<td>{{item.name}}</td>
+					<td width="40%">{{item.price}}</td>
+					<td width="200"><button class="btn btn-primary" @click="sum(index)">加入购物车</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<car :total="$total" :list="foodList" @add="sum" @minus="minus" :clear="clear"></car>
+	</div>
+	<script>
+		var foodList = [
+			{name:"酸辣士豆丝盖饭",price:7,count:0},
+			{name:"叉烧茄子盖饭",price:8,count:0},
+			{name:"土豆盐煎肉盖饭",price:9,count:0},
+			{name:"尖椒肥肠盖饭",price:12,count:0},
+			{name:"木须肉盖饭",price:9,count:0},  
+			{name:"红烧肉盖饭",price:12,count:0},
+			{name:"韭菜鸡蛋盖饭",price:8,count:0},  
+			{name:"腐竹肉丝盖饭",price:9,count:0},  
+			{name:"回锅肉盖饭",price:10,count:0},
+			{name:"麻辣鸡块盖饭",price:12,count:0},  
+			{name:"红烧茄子盖饭",price:8,count:0},  
+			{name:"肉沫酸豆角盖饭",price:9,count:0},
+			{name:"鱼香肉丝盖饭",price:9,count:0},  
+			{name:"肉末茄子盖饭",price:9,count:0},
+			{name:"红烧排骨盖饭",price:13,count:0},
+			{name:"宫爆鸡丁盖饭",price:9,count:0},  
+			{name:"香辣肉丝盖饭",price:9,count:0},
+			{name:"飘香辣子鸡盖饭",price:12,count:0},
+			{name:"麻辣鸡片盖饭",price:9,count:0},  
+			{name:"蒜薹肉丝盖饭",price:9,count:0},  
+			{name:"红烧鸡块盖饭",price:12,count:0},
+			{name:"葱爆鸭片盖饭",price:9,count:0},  
+			{name:"蒜蓉油麦菜盖饭",price:8,count:0},  
+			{name:"香干肉丝盖饭",price:9,count:0},  
+			{name:"酱爆鸡丁盖饭",price:9,count:0},
+			{name:"香辣脆脆骨盖饭",price:13,count:0},
+			{name:"泡菜肉丝盖饭",price:9,count:0},  
+			{name:"水煮肉片盖饭",price:9,count:0},
+			{name:"荷香牛柳盖饭",price:10,count:0},
+			{name:"干锅土豆片盖饭",price:8,count:0},
+			{name:"西红柿鸡蛋盖饭",price:8,count:0},
+			{name:"鱼香茄子盖饭",price:8,count:0}, 
+			{name:"火腿木耳炒鸡蛋盖饭",price:8,count:0},
+			{name:"蘑菇青菜盖饭",price:8,count:0},
+			{name:"香菇油菜盖饭",price:8,count:0},  
+			{name:"青椒肉丝盖饭",price:9,count:0},  
+			{name:"肉末粉条盖饭",price:9,count:0},
+			{name:"豆角炒肉盖饭",price:9,count:0},  
+			{name:"蘑菇鸡片盖饭",price:9,count:0},  
+			{name:"剁椒鸡蛋盖饭",price:8,count:0},
+			{name:"麻婆豆腐盖饭",price:7,count:0},  
+			{name:"蚝油牛柳盖饭",price:10,count:0}, 
+			{name:"葱花鸡蛋盖饭",price:8,count:0},
+			{name:"地三鲜盖饭",price:8,count:0},  
+			{name:"豆花牛柳盖饭",price:10,count:0},  
+			{name:"鱼香鸡蛋盖饭",price:8,count:0},
+			{name:"爆炒猪肝盖饭",price:9,count:0},  
+			{name:"苦瓜炒肉盖饭",price:9,count:0},  
+			{name:"手撕包菜盖饭",price:7,count:0},
+			{name:"葱爆肉盖饭",price:9,count:0},  
+			{name:"木耳小炒肉盖饭",price:9,count:0},  
+			{name:"农家小炒肉盖饭",price:9,count:0},
+			{name:"外婆菜炒鸡蛋盖饭",price:9,count:0},  
+			{name:"孜然里脊盖饭",price:9,count:0},
+			{name:"香干回锅肉盖饭",price:10,count:0},
+			{name:"土豆肉片盖饭",price:9,count:0},  
+			{name:"铁板豆腐盖饭",price:8,count:0},
+			{name:"豆角烧茄子盖饭",price:8,count:0}
+		];
+
+		Vue.component("car",{
+			template:`
+				<div class="cart">
+					<h4>
+						购物车<span id="clear" @click="clear">[清空]</span>
+						<ul>
+							<li v-if="item.count" v-for="(item,index) of list">
+								{{item.name}}
+								<button @click="add(index)">+</button>
+								{{item.count}}
+								<button @click="minus(index)">-</button>
+							</li>
+						</ul>
+					</h4>
+					<div class="total">
+						￥{{total}}
+						<button v-if="total" class="btn btn-primary">去结算 &gt;</button>
+						<button v-if="!total" class="btn btn-default" disabled>无商品</button>
+					</div>
+				</div>
+			`,
+			props:["total","list","clear"],
+			methods:{
+				add:function(n){
+					this.$emit("add",n)
+				},
+				minus:function(n){
+					this.$emit("minus",n)
+				}
+			}
+		})
+
+		new Vue({
+			el:"#wrap",
+			data:{
+				title:"订餐系统",
+				foodList:foodList
+			},
+			computed:{
+				$total:function(){
+					var result = 0;
+					for(let item of this.foodList){
+						result += item.count * item.price
+					}
+					return result;
+				}
+			},
+			methods:{
+				sum:function(index){
+					this.foodList[index].count++;
+				},
+				clear:function(){
+					for(var i = 0;i < this.foodList.length;i++){
+						this.foodList[i].count = 0;
+					}
+				},
+				minus:function(index){
+					this.foodList[index].count--;
+				}
+			}
+		})
+	</script>
+</body>
+</html>
